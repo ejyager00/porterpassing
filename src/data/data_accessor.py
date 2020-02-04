@@ -3,13 +3,13 @@ import os
 from base64 import decodebytes
 from pysftp import Connection, CnOpts
 from paramiko.ecdsakey import ECDSAKey
-#from dotenv import find_dotenv, load_dotenv
+from dotenv import find_dotenv, load_dotenv
 #above line is only necessary if this is not run in tandem with make_dataset.py
 
-#load_dotenv(find_dotenv())
+load_dotenv(find_dotenv())
 #above line is only necessary if this is not run in tandem with make_dataset.py
 
-def open_sftp_connection():
+def open_sftp_connection(directory='/'):
     hostname = str(os.environ.get("DATA_ADDRESS"))
     username = str(os.environ.get("USERNAME"))
     password = str(os.environ.get("PASSWORD"))
@@ -17,8 +17,10 @@ def open_sftp_connection():
     key = ECDSAKey(data=decodebytes(os.environ.get("KEY").encode()))
     cnopts = CnOpts()
     cnopts.hostkeys.add(hostname, key_type, key)
-    return Connection(host=hostname, username=username,
+    sftp = Connection(host=hostname, username=username,
                       password=password, cnopts=cnopts)
+    sftp.cwd(directory)
+    return sftp
 
 if __name__ == '__main__':
     #-------LOAD ENVIRONMENT VARIABLES FOR CONNECTION--------#
