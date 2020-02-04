@@ -32,3 +32,5 @@ for filename in files:
                 print(thing)
 
             rasterio.plot.show(dataset)
+    elif filename[-4]=='.las':
+        
