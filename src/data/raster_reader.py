@@ -35,12 +35,13 @@ def raster_summary(dataset):
 
     show(dataset)
 
-files = os.listdir('data/raw')
-tif_files = []
-las_files = []
+if __name__ == '__main__':
+    files = os.listdir('data/raw')
+    tif_files = []
+    las_files = []
 
-for filename in files:
-    if filename[-4:]=='.tif':
-        tif_files.append(filename)
-    elif filename[-4]=='.las':
-        las_files.append(filename)
+    for filename in files:
+        if filename[-4:]=='.tif':
+            tif_files.append(filename)
+        elif filename[-4]=='.las':
+            las_files.append(filename)
