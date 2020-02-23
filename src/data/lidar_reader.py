@@ -20,6 +20,7 @@ def create_interpolator(dir='data/raw/',dumpfile='linear_interpolator.pickle'):
     interpolator = LinearNDInterpolator(coords[:,0:2], coords[:,2])
     with open(dumpfile, 'wb') as pickle_file:
         pickle.dump(interpolator, pickle_file)
+    return interpolator
 
 if __name__ == '__main__':
     create_interpolator()
