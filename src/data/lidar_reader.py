@@ -1,7 +1,8 @@
 import os
 from laspy.file import File
 import numpy as np
-from scipy.interpolate import SmoothBivariateSpline
+from scipy.interpolate import LinearNDInterpolator
+import pickle
 
 files = os.listdir('data/raw/')
 las_file_names = []
@@ -16,5 +17,6 @@ for filename in las_file_names:
     las_file = File('data/raw/'+filename)
     coords = np.concatenate((coords, np.vstack((las_file.x, las_file.y, las_file.z)).transpose()), axis=0)
     las_file.close()
-coords_split = np.hsplit(coords, np.array([1,2]))
-SmoothBivariateSpline(coords_split[0],coords_split[1],coords_split[2])
+interpolator = LinearNDInterpolator(coords[:,0:2], coords[:,2])
+with open('linear_interpolator.pickle', 'wb') as pickle_file:
+    pickle.dump(interpolator, pickle_file)
