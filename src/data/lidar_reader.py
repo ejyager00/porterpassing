@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from laspy.file import File
 import numpy as np
 from scipy.interpolate import LinearNDInterpolator
@@ -23,4 +24,6 @@ def create_interpolator(dir='data/raw/',dumpfile='linear_interpolator.pickle'):
     return interpolator
 
 if __name__ == '__main__':
-    create_interpolator()
+    project_dir = str(Path(__file__).resolve().parents[2])
+    create_interpolator(dir=project_dir+'/data/raw/',
+                        dumpfile=project_dir+'/models/linear_interpolator.pickle')
