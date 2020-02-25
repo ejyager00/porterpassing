@@ -5,7 +5,7 @@ import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 import pickle
 
-def create_interpolator(dir='data/raw/',dumpfile='linear_interpolator.pickle'):
+def total_las_points(dir='data/raw/'):
     files = os.listdir(dir)
     las_file_names = []
     for filename in files:
@@ -18,6 +18,10 @@ def create_interpolator(dir='data/raw/',dumpfile='linear_interpolator.pickle'):
         las_file = File(dir+filename)
         coords = np.concatenate((coords, np.vstack((las_file.x, las_file.y, las_file.z)).transpose()), axis=0)
         las_file.close()
+    return coords
+
+def create_interpolator(dir='data/raw/',dumpfile='linear_interpolator.pickle'):
+    coords = total_las_points(dir=dir)
     interpolator = LinearNDInterpolator(coords[:,0:2], coords[:,2])
     with open(dumpfile, 'wb') as pickle_file:
         pickle.dump(interpolator, pickle_file)

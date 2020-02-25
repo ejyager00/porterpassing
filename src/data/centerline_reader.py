@@ -35,16 +35,17 @@ def line_points(x1,y1,x2,y2):
 		points.append([x1+i*dx,y1+i*dy])
 	return points
 
-def get_centerlines(dir="data/raw/Road_Centerlines/RoadExport",dumpfile='centerpoints.pickle'):
-    shapes = get_centerlines(dir)
+def get_centerlines(dir="data/raw/Road_Centerlines/RoadExport",dumpfile='centerpoints.pickle',dump=False):
+    shapes = get_centerline_data(dir)
     full_lines = []
     for shape in shapes:
         for i in range(1,len(shape.points)):
             full_lines.append(line_points(shape.points[i-1][0],shape.points[i-1][1],
                                           shape.points[i][0],shape.points[i][1]))
-    with open(dumpfile, 'wb') as pickle_file:
-        pickle.dump(full_lines, pickle_file)
+    if dump:
+        with open(dumpfile, 'wb') as pickle_file:
+            pickle.dump(full_lines, pickle_file)
     return full_lines
 
 if __name__ == '__main__':
-    get_centerlines()
+    get_centerlines(dump=True)
