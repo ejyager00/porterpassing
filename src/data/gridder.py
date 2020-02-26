@@ -10,9 +10,9 @@ from centerline_reader import get_centerlines
 def gridder():
     centerlines = get_centerlines()
     print("center points found")
-    desired = centerlines.pop()
+    desired = []
     for x in centerlines:
-        desired = desired.extend(x)
+        desired = desired + x
     print("desired points found")
     known = total_las_points()
     print("known points found")
