@@ -3,6 +3,7 @@ import pickle
 import os
 from laspy.file import File
 import numpy as np
+from shapely.geometry import LineString
 
 def get_centerline_data(dir="data/raw/Road_Centerlines/RoadExport"):
     with shapefile.Reader(dir) as sf:
@@ -49,8 +50,11 @@ def line_seg_intersect(line1, line2):
     y2=line1[1][1]
     y3=line2[0][1]
     y4=line2[1][1]
-    t1 = ((y3-y4)*(x1-x3)+(x4-x3)*(y1-y3))/((x4-x3)*(y1-y2)-(x1-x2)*(y4-y3))
-    t2 = ((y1-y2)*(x1-x3)+(x2-x1)*(y1-y3))/((x4-x3)*(y1-y2)-(x1-x2)*(y4-y3))
+    try:
+        t1 = ((y3-y4)*(x1-x3)+(x4-x3)*(y1-y3))/((x4-x3)*(y1-y2)-(x1-x2)*(y4-y3))
+        t2 = ((y1-y2)*(x1-x3)+(x2-x1)*(y1-y3))/((x4-x3)*(y1-y2)-(x1-x2)*(y4-y3))
+    except ZeroDivisionError:
+        return False
     if t1>=0 and t1<=1 and t2>=0 and t2<=1:
         return (x1+t1*(x2-x1),y1+t1*(y2-y1))
     else:
@@ -73,6 +77,7 @@ def boundary_intersect(p1, p2, b):
 def get_relevant_centerlines(centerlines, bounds):
     inbound_roads = []
     for polyline in centerlines:
+        polyline=polyline.points
         new_points = []
         if is_in_bounds(polyline[0], bounds):
             new_points.append(polyline[0])
@@ -95,9 +100,14 @@ def get_relevant_centerlines(centerlines, bounds):
 if __name__=='__main__':
     centerlines=get_centerline_data()
     print("centerlines loaded")
-    bounds=las_min_max()
+    #bounds=las_min_max()
+    bounds = {'MIN_X': 2950000.0, 'MAX_X': 2959999.99, 'MIN_Y': 2280000.0, 'MAX_Y': 2309999.99}
     print("bounds found")
-    print(bounds)
+    #print(bounds)
     relevant_centerlines = get_relevant_centerlines(centerlines, bounds)
-    for line in relevant_centerlines:
-        print(line)
+    with shapefile.Writer("data/interim/centerlines",shapeType=3) as shp:
+        shp.field("TEMP",'N')
+        for i,line in enumerate(relevant_centerlines):
+            print(line)
+            shp.shape(LineString(line))
+            shp.record(i)
