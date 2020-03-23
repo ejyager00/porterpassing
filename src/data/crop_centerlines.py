@@ -72,7 +72,7 @@ def boundary_intersect(p1, p2, b):
 
 def get_relevant_centerlines(centerlines, bounds):
     inbound_roads = []
-    for polyline in polylines:
+    for polyline in centerlines:
         new_points = []
         if is_in_bounds(polyline[0], bounds):
             new_points.append(polyline[0])
@@ -94,7 +94,10 @@ def get_relevant_centerlines(centerlines, bounds):
 
 if __name__=='__main__':
     centerlines=get_centerline_data()
+    print("centerlines loaded")
     bounds=las_min_max()
+    print("bounds found")
+    print(bounds)
     relevant_centerlines = get_relevant_centerlines(centerlines, bounds)
     for line in relevant_centerlines:
         print(line)
