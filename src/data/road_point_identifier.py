@@ -2,6 +2,7 @@ from laspy.file import File
 import shapefile
 import os
 import numpy as np
+import csv
 
 def get_centerline_data(dir="data/interim/centerlines"):
     with shapefile.Reader(dir) as sf:
@@ -35,6 +36,7 @@ for filename in files:
 
 road_points = []
 
+i=0
 for filename in las_file_names:
     las_file = File('data/raw/'+filename)
     coords = np.vstack((las_file.x, las_file.y, las_file.z)).transpose()
@@ -43,7 +45,21 @@ for filename in las_file_names:
             if distance_to_road(point, road)<10:
                 road_points.append(point)
                 break
+        i+=1
+        if not (i)%100:
+            print(i,"points complete")
     las_file.close()
     print("another one down")
 
+with open("road_points.csv", 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    j=len(road_points)
+    i=0
+    for point in road_points:
+        csvwriter.writerow(point)
+        i+=1
+        if not (i*100)%j:
+            print(i*100,"percent saved")
+
 print(road_points)
+print("length:", len(road_points))
