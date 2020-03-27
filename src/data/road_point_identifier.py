@@ -20,7 +20,7 @@ def distance_to_road(point, road):
             return (dx*dx+dy*dy)**.5
         t = ((p[0]-road[i-1][0])*dx+(p[1]-road[i-1][1])*dy)/(dx*dx+dy*dy)
         if t < 0 or t > 1:
-            return 99999 #arbitrarily large constant
+            return 127 #arbitrarily large constant
         else:
             dx = p[0]-road[i-1][0]+t*dx
             dy = p[1]-road[i-1][1]+t*dy
