@@ -11,20 +11,22 @@ def get_centerline_data(dir="data/interim/centerlines"):
 def distance_to_road(point, road):
     road=road.points
     p=point
+    min=2047 #arbitrarily large constant
     for i in range(1,len(road)):
         dx = road[i][0]-road[i-1][0]
         dy= road[i][1]-road[i-1][1]
         if dx==0 and dy==0:
             dx=p[0]-road[i][0]
             dy=p[1]-road[i][1]
-            return (dx*dx+dy*dy)**.5
-        t = ((p[0]-road[i-1][0])*dx+(p[1]-road[i-1][1])*dy)/(dx*dx+dy*dy)
-        if t < 0 or t > 1:
-            return 127 #arbitrarily large constant
+            m= (dx*dx+dy*dy)**.5
         else:
-            dx = p[0]-road[i-1][0]+t*dx
-            dy = p[1]-road[i-1][1]+t*dy
-            return (dx*dx+dy*dy)**.5
+            t = ((p[0]-road[i-1][0])*dx+(p[1]-road[i-1][1])*dy)/(dx*dx+dy*dy)
+            if t >= 0 and t <= 1:
+                dx = p[0]-(road[i-1][0]+t*dx)
+                dy = p[1]-(road[i-1][1]+t*dy)
+                m= (dx*dx+dy*dy)**.5
+        if m<min:
+            min=m
 
 centerlines = get_centerline_data()
 
