@@ -27,6 +27,7 @@ def distance_to_road(point, road):
                 m= (dx*dx+dy*dy)**.5
         if m<min:
             min=m
+    return min
 
 centerlines = get_centerline_data()
 
