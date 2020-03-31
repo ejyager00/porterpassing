@@ -25,6 +25,8 @@ def distance_to_road(point, road):
                 dx = p[0]-(road[i-1][0]+t*dx)
                 dy = p[1]-(road[i-1][1]+t*dy)
                 m= (dx*dx+dy*dy)**.5
+            else:
+                m=2047
         if m<min:
             min=m
     return min
