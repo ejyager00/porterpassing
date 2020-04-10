@@ -1,13 +1,9 @@
 import shapefile
 import pickle
-#from numpy import genfromtxt
 
 def get_centerline_data(dir="data/interim/centerlines"):
     with shapefile.Reader(dir) as sf:
         return sf.shapes()
-
-#def get_lidar_points(file="data/interim/road_points.csv"):
-#    return genfromtxt(file, delimiter=',')
 
 def generate_bins(road):
     rdpts=road.points
@@ -22,11 +18,11 @@ def generate_bins(road):
         dy=dy/magnitude
         curx = rdpts[i-1][0]
         cury = rdpts[i-1][1]
-        iterations=int(magnitude/2)
-        if magnitude%2<1:
+        iterations=int(magnitude/6)
+        if magnitude%6<4:
             iterations-=1
             if iterations<0:
-                diff = 1-magnitude
+                diff = 4-magnitude
                 curx = curx - diff*dx
                 cury = cury - diff*dy
         bins=[]
@@ -34,8 +30,8 @@ def generate_bins(road):
             corners=[]
             corners.append((curx-10*dy,cury+10*dx))
             corners.append((curx+10*dy,cury-10*dx))
-            curx = curx + 2*dx
-            cury = cury + 2*dy
+            curx = curx + 6*dx
+            cury = cury + 6*dy
             corners.append((curx+10*dy,cury-10*dx))
             corners.append((curx-10*dy,cury+10*dx))
             bins.append(corners)
@@ -51,7 +47,6 @@ def generate_bins(road):
     return segments
 
 roads = get_centerline_data()
-#points = get_lidar_points()
 
 road_bins = []
 for road in roads:
