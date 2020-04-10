@@ -4,17 +4,21 @@ import os
 from laspy.file import File
 import numpy as np
 from shapely.geometry import LineString
+import sys
 
 def get_centerline_data(dir="data/raw/Road_Centerlines/RoadExport"):
     with shapefile.Reader(dir) as sf:
         return sf.shapes()
 
-def las_min_max(dir='data/raw/'):
-    files = os.listdir(dir)
+def las_min_max(path='data/raw/', multi=False):
     las_file_names = []
-    for filename in files:
-        if filename[-4:]=='.las':
-            las_file_names.append(filename)
+    if multi:
+        files = os.listdir(path)
+        for filename in files:
+            if filename[-4:]=='.las':
+                las_file_names.append(path+filename)
+    else:
+        las_file_names.append(path)
     las_file = File(dir+las_file_names[0])
     bounds = {
         'MIN_X':las_file.x[0],
@@ -24,17 +28,20 @@ def las_min_max(dir='data/raw/'):
     }
     las_file.close()
     for filename in las_file_names:
-        las_file = File(dir+filename)
+        las_file = File(filename)
         coords = np.vstack((las_file.x, las_file.y, las_file.z)).transpose()
-        for point in coords:
-            if point[0]<bounds['MIN_X']:
-                bounds['MIN_X']=point[0]
-            elif point[0]>bounds['MAX_X']:
-                bounds['MAX_X']=point[0]
-            if point[1]<bounds['MIN_Y']:
-                bounds['MIN_Y']=point[1]
-            elif point[1]>bounds['MAX_Y']:
-                bounds['MAX_Y']=point[1]
+        minx=coords[:,0].min()
+        maxx=coords[:,0].max()
+        miny=coords[:,1].min()
+        maxy=coords[:,1].max()
+        if minx<bounds['MIN_X']:
+            bounds['MIN_X']=minx
+        if maxx>bounds['MAX_X']:
+            bounds['MAX_X']=maxx
+        if miny<bounds['MIN_Y']:
+            bounds['MIN_Y']=miny
+        if maxy>bounds['MAX_Y']:
+            bounds['MAX_Y']=maxy
         las_file.close()
     return bounds
 
@@ -97,17 +104,30 @@ def get_relevant_centerlines(centerlines, bounds):
             inbound_roads.append(new_points)
     return inbound_roads
 
-if __name__=='__main__':
-    centerlines=get_centerline_data()
-    print("centerlines loaded")
-    #bounds=las_min_max()
-    bounds = {'MIN_X': 2950000.0, 'MAX_X': 2959999.99, 'MIN_Y': 2280000.0, 'MAX_Y': 2309999.99}
-    print("bounds found")
-    #print(bounds)
+def check_args(args):
+    if len(args)<4:
+        raise RuntimeError("You must include a shapefile, the number of las files, a path for las files, and a path to save new shapefile.")
+    try:
+        int(args[1])
+    except:
+        raise RuntimeError("Second argument must be the number of las files.")
+    try:
+        shapefile.Reader(args[0])
+    except:
+        raise RuntimeError("First argument must be a shapefile.")
+
+def main(args):
+    check_args(args)
+    centerlines=get_centerline_data(args[0])
+    bounds=las_min_max(args[2],int(args[1])>1)
     relevant_centerlines = get_relevant_centerlines(centerlines, bounds)
-    with shapefile.Writer("data/interim/centerlines",shapeType=3) as shp:
+    with shapefile.Writer(args[3],shapeType=3) as shp:
         shp.field("TEMP",'N')
         for i,line in enumerate(relevant_centerlines):
             print(line)
             shp.shape(LineString(line))
             shp.record(i)
+
+if __name__=='__main__':
+    #args: shapefile number_of_las_files path shapefile
+    main(sys.argv[1:])
