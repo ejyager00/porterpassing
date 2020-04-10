@@ -11,7 +11,7 @@ def get_centerline_data(dir="data/interim/centerlines"):
 def distance_to_road(point, road):
     road=road.points
     p=point
-    min=2047 #arbitrarily large constant
+    min=65535 #arbitrarily large constant
     for i in range(1,len(road)):
         dx = road[i][0]-road[i-1][0]
         dy= road[i][1]-road[i-1][1]
@@ -26,7 +26,7 @@ def distance_to_road(point, road):
                 dy = p[1]-(road[i-1][1]+t*dy)
                 m= (dx*dx+dy*dy)**.5
             else:
-                m=2047
+                m=65535
         if m<min:
             min=m
     return min
@@ -54,17 +54,11 @@ for filename in las_file_names:
         if not (i)%100:
             print(i,"points complete")
     las_file.close()
-    print("another one down")
 
 with open("road_points.csv", 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
-    j=len(road_points)
-    i=0
     for point in road_points:
         csvwriter.writerow(point)
-        i+=1
-        if not (i*100)%j:
-            print(i*100,"percent saved")
 
 print(road_points)
 print("length:", len(road_points))
