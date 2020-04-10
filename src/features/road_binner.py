@@ -83,4 +83,5 @@ def main(args):
         pickle.dump(road_bins, pickle_file)
 
 if __name__ == '__main__':
+    #args: shapefile pickle_file bin_length
     main(sys.argv[1:])
