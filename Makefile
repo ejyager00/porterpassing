@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements #sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements heights #sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -37,6 +37,11 @@ clean:
 ## Lint using flake8
 lint:
 	flake8 src
+
+heights:
+	$(PYTHON_INTERPRETER) src/data/crop_centerlines.py data/raw/Road_Centerlines/RoadExport 1 LASFILE SHPFILE
+	$(PYTHON_INTERPRETER) src/features/road_binner.py SHPFILE BINFILE 5
+	$(PYTHON_INTERPRETER) src/features/road_height_calculator.py BINFILE 1 LASFILE OUT
 
 ## Upload Data to S3
 #sync_data_to_s3:
