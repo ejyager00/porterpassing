@@ -37,7 +37,7 @@ def find_points_in_bin(pts,bin):
 def main(args):
     bins = get_bins(args[0])
     points = get_lidar_points(args[2],int(args[1])>1)
-    points = points[points[:,0].argsort()]
+    #points = points[points[:,0].argsort()]
 
     roads=[]
     for i, road in enumerate(bins):
@@ -60,7 +60,7 @@ def main(args):
                         maxY=p[1]
                 pts=points[points[:,0]<=maxX]
                 pts=pts[pts[:,0]>=minX]
-                pts=pts[pts[:,1].argsort()]
+                #pts=pts[pts[:,1].argsort()]
                 pts=pts[pts[:,1]<=maxY]
                 pts=pts[pts[:,1]>=minY]
                 bin_pts=find_points_in_bin(pts,bin)
