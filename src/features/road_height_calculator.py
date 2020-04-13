@@ -71,9 +71,9 @@ def main(args):
                 bins.append(height)
             segments.append(bins)
         roads.append(segments)
-    with open("data/interim/road_heighgts.pickle", 'wb') as pickle_file:
+    with open(args[3], 'wb') as pickle_file:
         pickle.dump(roads, pickle_file)
 
 if __name__ == '__main__':
-    #args: bin_pickle number_of_las_files path
+    #args: bin_pickle number_of_las_files path out
     main(sys.argv[1:])
