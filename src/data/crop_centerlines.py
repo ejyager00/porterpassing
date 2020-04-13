@@ -19,7 +19,7 @@ def las_min_max(path='data/raw/', multi=False):
                 las_file_names.append(path+filename)
     else:
         las_file_names.append(path)
-    las_file = File(dir+las_file_names[0])
+    las_file = File(las_file_names[0])
     bounds = {
         'MIN_X':las_file.x[0],
         'MAX_X':las_file.x[0],
