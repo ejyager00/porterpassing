@@ -33,8 +33,8 @@ def generate_bins(road, bin_length):
             corners=[]
             corners.append((curx-10*dy,cury+10*dx))
             corners.append((curx+10*dy,cury-10*dx))
-            curx = curx + 6*dx
-            cury = cury + 6*dy
+            curx = curx + bin_length*dx
+            cury = cury + bin_length*dy
             corners.append((curx+10*dy,cury-10*dx))
             corners.append((curx-10*dy,cury+10*dx))
             bins.append(corners)
@@ -52,7 +52,7 @@ def generate_bins(road, bin_length):
 def check_arguments(args):
     if len(args)<2:
         raise RuntimeError("You must include a shapefile and a pickle file in the arguments.")
-    else
+    else:
         try:
             shapefile.Reader(args[0])
         except:

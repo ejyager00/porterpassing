@@ -124,7 +124,6 @@ def main(args):
     with shapefile.Writer(args[3],shapeType=3) as shp:
         shp.field("TEMP",'N')
         for i,line in enumerate(relevant_centerlines):
-            print(line)
             shp.shape(LineString(line))
             shp.record(i)
 

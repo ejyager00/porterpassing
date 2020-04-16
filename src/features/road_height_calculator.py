@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 import sys
+from laspy.file import File
 
 def get_bins(file="data/interim/roadbins.pickle"):
     return pickle.load(open(file,'rb'))
@@ -21,7 +22,7 @@ def get_lidar_points(path='data/raw/', multi=False):
         las_file = File(filename)
         coords = np.concatenate((coords, np.vstack((las_file.x, las_file.y, las_file.z)).transpose()), axis=0)
         las_file.close()
-    return bounds
+    return coords
 
 def find_points_in_bin(pts,bin):
     points=[]
@@ -65,7 +66,7 @@ def main(args):
                 pts=pts[pts[:,1]>=minY]
                 bin_pts=find_points_in_bin(pts,bin)
                 if len(bin_pts)>0:
-                    height=np.average(bin_pts[:,2])
+                    height=np.mean(bin_pts, axis=0)[2]
                 else:
                     height=np.nan
                 bins.append(height)
