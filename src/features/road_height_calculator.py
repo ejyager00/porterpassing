@@ -2,6 +2,7 @@ import pickle
 import numpy as np
 import sys
 from laspy.file import File
+import os
 
 def get_bins(file="data/interim/roadbins.pickle"):
     return pickle.load(open(file,'rb'))
