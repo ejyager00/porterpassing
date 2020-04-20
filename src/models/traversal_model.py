@@ -17,7 +17,7 @@ for road in heights:
         if isnan(point[2]):
             r.append((False,False))
             continue
-        p = ()
+        p = []
         dif=1
         while True:
             if i+dif==len(road):
@@ -52,4 +52,4 @@ for road in heights:
     roads.append(r)
 
 with open('data/processed/zones.pickle', 'wb') as pickle_file:
-    pickle.dump(road_bins, pickle_file)
+    pickle.dump(roads, pickle_file)

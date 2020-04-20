@@ -8,7 +8,7 @@ heights=pickle.load(open('data/interim/heights.pickle', 'rb'))
 
 roads=[]
 for road in bins:
-    segemnts=[]
+    segments=[]
     for segment in road:
         points=[]
         for bin in segment:
