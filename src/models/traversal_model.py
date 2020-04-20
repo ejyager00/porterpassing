@@ -1,29 +1,55 @@
-import shapefile
-import csv
+import pickle
+from numpy import NaN
+from numpy import isnan
 
-class RoadBin:
+DISTANCE_AHEAD = 100
+HEIGHT_DIFF = 5
 
-    def __init__(self, start_point, end_point, height):
-        self.start_point = start_point
-        self.end_point = end_point
-        self.height = height
+def distance(x1,y1,x2,y2):
+    return ((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))**.5
 
-def get_centerline_data(dir="data/interim/centerlines"):
-    with shapefile.Reader(dir) as sf:
-        return sf.shapes()
+heights=pickle.load(open('data/interim/centerpoints.pickle', 'rb'))
 
-def get_elevations():
-    with open("road_points.csv","r") as points_file:
-        
-    return
+roads=[]
+for road in heights:
+    r=[]
+    for i, point in enumerate(road):
+        if isnan(point[2]):
+            r.append((False,False))
+            continue
+        p = ()
+        dif=1
+        while True:
+            if i+dif==len(road):
+                p.append(False)
+                break
+            elif isnan(road[i+dif][2]):
+                p.append(False)
+                break
+            elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
+                p.append(False)
+                break
+            elif distance(point[0],point[1],road[i+dif][0],road[i+dif][1])>DISTANCE_AHEAD:
+                p.append(True)
+                break
+            dif+=1
+        dif=-1
+        while True:
+            if i+dif==-1:
+                p.append(False)
+                break
+            elif isnan(road[i+dif][2]):
+                p.append(False)
+                break
+            elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
+                p.append(False)
+                break
+            elif distance(point[0],point[1],road[i+dif][0],road[i+dif][1])>DISTANCE_AHEAD:
+                p.append(True)
+                break
+            dif-=1
+        r.append(p)
+    roads.append(r)
 
-def create_road_bins(road):
-    return
-
-def calculate_roadbin_height(roadbins, elevations):
-    return
-
-roads = get_centerline_data()
-for road in roads:
-    road_bins = create_road_bins(road)
-    road_bins = calculate_roadbin_height(road_bins, elevations)
+with open('data/processed/zones.pickle', 'wb') as pickle_file:
+    pickle.dump(road_bins, pickle_file)
