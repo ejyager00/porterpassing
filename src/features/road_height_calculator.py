@@ -36,7 +36,13 @@ def find_points_in_bin(pts,bin):
             points.append(p)
     return points
 
+def check_arguments(args):
+    pass
+
 def main(args):
+
+    check_arguments(args):
+
     bins = get_bins(args[0])
     points = get_lidar_points(args[2],int(args[1])>1)
     #points = points[points[:,0].argsort()]

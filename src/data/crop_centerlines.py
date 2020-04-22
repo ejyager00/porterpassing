@@ -104,7 +104,7 @@ def get_relevant_centerlines(centerlines, bounds):
             inbound_roads.append(new_points)
     return inbound_roads
 
-def check_args(args):
+def check_arguments(args):
     if len(args)<4:
         raise RuntimeError("You must include a shapefile, the number of las files, a path for las files, and a path to save new shapefile.")
     try:
@@ -117,7 +117,7 @@ def check_args(args):
         raise RuntimeError("First argument must be a shapefile.")
 
 def main(args):
-    check_args(args)
+    check_arguments(args)
     centerlines=get_centerline_data(args[0])
     bounds=las_min_max(args[2],int(args[1])>1)
     relevant_centerlines = get_relevant_centerlines(centerlines, bounds)
