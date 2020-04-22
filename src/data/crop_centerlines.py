@@ -117,7 +117,6 @@ def check_arguments(args):
         raise RuntimeError("First argument must be a shapefile.")
 
 def main(args):
-    check_arguments(args)
     centerlines=get_centerline_data(args[0])
     bounds=las_min_max(args[2],int(args[1])>1)
     relevant_centerlines = get_relevant_centerlines(centerlines, bounds)
@@ -129,4 +128,5 @@ def main(args):
 
 if __name__=='__main__':
     #args: shapefile number_of_las_files path shapefile
+    check_arguments(sys.argv[1:])
     main(sys.argv[1:])

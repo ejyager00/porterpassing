@@ -5,11 +5,10 @@ def get_centerpoint(bin):
     return ((bin[0][0]+bin[1][0]+bin[2][0]+bin[3][0])/4, (bin[0][1]+bin[1][1]+bin[2][1]+bin[3][1])/4)
 
 def check_arguments(args):
-    pass
+    if len(args)<3:
+        raise RuntimeError("You must include three pickle files in the arguments.")
 
 def main(args):
-
-    check_arguments(args)
 
     bins=pickle.load(open('data/interim/bin.pickle', 'rb'))
     heights=pickle.load(open('data/interim/heights.pickle', 'rb'))
@@ -37,5 +36,6 @@ def main(args):
         pickle.dump(roads, pickle_file)
 
 if __name__=='__main__':
-    #args:
+    #args: bins_pickle heights_pickle centerpoints_pickle
+    check_arguments(sys.argv[1:])
     main(sys.argv[1:])

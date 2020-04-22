@@ -69,7 +69,6 @@ def check_arguments(args):
                 raise RuntimeError("The third argument should be a number.")
 
 def main(args):
-    check_arguments(args)
     if len(args)<3:
         bin_length=DEFAULT_BIN_LENGTH
     else:
@@ -84,4 +83,5 @@ def main(args):
 
 if __name__ == '__main__':
     #args: shapefile pickle_file bin_length
+    check_arguments(sys.argv[1:])
     main(sys.argv[1:])

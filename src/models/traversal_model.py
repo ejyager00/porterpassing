@@ -10,11 +10,10 @@ def distance(x1,y1,x2,y2):
     return ((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))**.5
 
 def check_arguments(args):
-    pass
+    if len(args)<2:
+        raise RuntimeError("You must include two pickle files in the arguments.")
 
 def main(args):
-
-    check_arguments(args)
 
     heights=pickle.load(open('data/interim/centerpoints.pickle', 'rb'))
 
@@ -66,5 +65,6 @@ def main(args):
         pickle.dump(roads, pickle_file)
 
 if __name__=='__main__':
-    #args:
+    #args: centerpoints_pickle zones_pickle
+    check_arguments(sys.argv[1:])
     main(sys.argv[1:])

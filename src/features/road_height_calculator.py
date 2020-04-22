@@ -37,12 +37,21 @@ def find_points_in_bin(pts,bin):
     return points
 
 def check_arguments(args):
-    pass
+    if len(args)<4:
+        raise RuntimeError("You must include a picke file of bins, the number of" +
+                           " las files, the las file path, and a pcikle file to " +
+                           "save to in the arguments." + )
+    try:
+        if (args[0][-7:]!=".pickle"):
+            raise RuntimeError("The first argument should be a pickle file.")
+    except:
+        raise RuntimeError("The first argument should be a pickle file.")
+    try:
+        int(args[1])
+    except:
+        raise RuntimeError("The second argument should be an integer.")
 
 def main(args):
-
-    check_arguments(args):
-
     bins = get_bins(args[0])
     points = get_lidar_points(args[2],int(args[1])>1)
     #points = points[points[:,0].argsort()]
@@ -84,4 +93,5 @@ def main(args):
 
 if __name__ == '__main__':
     #args: bin_pickle number_of_las_files path out
+    check_arguments(sys.argv[1:]):
     main(sys.argv[1:])
