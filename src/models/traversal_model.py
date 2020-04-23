@@ -3,7 +3,7 @@ from numpy import NaN
 from numpy import isnan
 import sys
 
-DISTANCE_AHEAD = 100
+DISTANCE_AHEAD = 300
 HEIGHT_DIFF = 3.5
 
 def distance(x1,y1,x2,y2):
@@ -15,7 +15,7 @@ def check_arguments(args):
 
 def main(args):
 
-    heights=pickle.load(open('data/interim/centerpoints.pickle', 'rb'))
+    heights=pickle.load(open(args[0], 'rb')) #'data/interim/centerpoints.pickle'
 
     roads=[]
     for road in heights:
@@ -26,42 +26,45 @@ def main(args):
                 continue
             p = []
             dif=1
-            distance=0
+            dist=0
             while True:
-                distance+= distance(road[i+dif][0],road[i+dif][1],road[i+dif-1][0],road[i+dif-1][1])
                 if i+dif==len(road):
                     p.append(False)
                     break
-                elif isnan(road[i+dif][2]):
-                    p.append(False)
-                    break
-                elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
-                    p.append(False)
-                    break
-                elif distance>DISTANCE_AHEAD:
-                    p.append(True)
-                    break
+                else:
+                    dist+= distance(road[i+dif][0],road[i+dif][1],road[i+dif-1][0],road[i+dif-1][1])
+                    if isnan(road[i+dif][2]):
+                        p.append(False)
+                        break
+                    elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
+                        p.append(False)
+                        break
+                    elif dist>DISTANCE_AHEAD:
+                        p.append(True)
+                        break
                 dif+=1
             dif=-1
+            dist=0
             while True:
-                distance+= distance(road[i+dif][0],road[i+dif][1],road[i+dif+1][0],road[i+dif+1][1])
                 if i+dif==-1:
                     p.append(False)
                     break
-                elif isnan(road[i+dif][2]):
-                    p.append(False)
-                    break
-                elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
-                    p.append(False)
-                    break
-                elif distance>DISTANCE_AHEAD:
-                    p.append(True)
-                    break
+                else:
+                    dist+= distance(road[i+dif][0],road[i+dif][1],road[i+dif+1][0],road[i+dif+1][1])
+                    if isnan(road[i+dif][2]):
+                        p.append(False)
+                        break
+                    elif road[i+dif][2]-point[2]>=HEIGHT_DIFF:
+                        p.append(False)
+                        break
+                    elif dist>DISTANCE_AHEAD:
+                        p.append(True)
+                        break
                 dif-=1
             r.append(p)
         roads.append(r)
 
-    with open('data/processed/zones.pickle', 'wb') as pickle_file:
+    with open(args[1], 'wb') as pickle_file: #'data/processed/zones.pickle'
         pickle.dump(roads, pickle_file)
 
 if __name__=='__main__':
