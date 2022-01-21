@@ -22,7 +22,7 @@ GDAL==2.4.2
 geopandas==0.6.2
 idna==2.8
 imageio==2.6.1
-ipython==7.11.1
+ipython==7.16.3
 ipython-genutils==0.2.0
 jedi==0.16.0
 Jinja2==2.10.3
